@@ -393,7 +393,7 @@ deno task dev
 - **PDF Processing**: Custom PDF parser
 - **CSV Processing**: Papa Parse library
 - **Excel Processing**: SheetJS library
-- **Frontend**: Pure JavaScript, HTML5, CSS3 (no frameworks needed)
+- **Frontend**: JavaScript, HTML5, CSS3 (no frameworks needed)
 - **Statistics**: Built-in statistical calculations
 
 ---
