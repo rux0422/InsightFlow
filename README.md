@@ -75,14 +75,18 @@ When you upload a PDF file, you can:
 ### Installation
 
 1. Clone this repository and navigate to it.
-2. Add Zypher Agent to your project (on Powershell):
-      deno add jsr:@corespeed/zypher and
+2. Add Zypher Agent to your project (on Powershell) and run the following commands:
+      ```
+      deno add jsr:@corespeed/zypher
       deno add npm:rxjs-for-await
-3. Run the below commands (on Powershell):
+      ```
+4. Run the below commands (on Powershell):
+    ```
     deno cache main.ts, 
     deno cache launcher.ts, 
     deno cache webServer.ts
-4. Create a `.env` file with your API key:
+    ```
+6. Create a `.env` file with your API key:
 
 ```bash
 ANTHROPIC_API_KEY=your_api_key_here
