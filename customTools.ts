@@ -225,7 +225,7 @@ export const extractInsightsTool = {
     type: "object",
     properties: {},
   },
-  execute: async () => {
+  execute: async (p0?: {}) => {
     try {
       const tableData = await storage.getLatestFile("table_data");
 
