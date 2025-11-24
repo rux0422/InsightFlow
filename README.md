@@ -4,7 +4,7 @@ From Files to Insights, Instantly. (supports .pdf, .csv and Excel files)
 
 ## What is InsightFlow?
 
-InsightFlow is an AI-powered tool that helps you understand your data files without writing any code. Simply upload your CSV, Excel, or PDF files, and get instant insights or answers to your questions.
+InsightFlow is an AI-powered tool that helps you obtain insights and information from the files you upload. Simply upload your CSV, Excel, or PDF files, and get instant insights or answers to your questions.
 
 **What makes InsightFlow different:**
 - **For Data Files (CSV/Excel)**: Get a comprehensive data science report automatically - no questions needed! The AI analyzes your entire dataset and provides detailed statistics, identifies patterns, detects outliers, and recommends machine learning algorithms suited for your data.
