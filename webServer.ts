@@ -562,7 +562,7 @@ async function handleRequest(req: Request): Promise<Response> {
       }
 
       // Generate insights
-      const result = await extractInsightsTool.execute({});
+      const result = await extractInsightsTool.execute();
       const data = JSON.parse(result);
 
       if (data.error) {
@@ -615,7 +615,7 @@ async function handleRequest(req: Request): Promise<Response> {
       }
 
       // Generate insights
-      const result = await extractInsightsTool.execute({});
+      const result = await extractInsightsTool.execute();
       const data = JSON.parse(result);
 
       if (data.error) {
@@ -627,7 +627,10 @@ async function handleRequest(req: Request): Promise<Response> {
       // Generate PDF
       const pdfBuffer = generateInsightsPDF(data.insights, session.currentFile);
 
-      return new Response(pdfBuffer, {
+      // Convert Uint8Array to Blob for Response compatibility
+      const pdfBlob = new Blob([pdfBuffer as BlobPart], { type: 'application/pdf' });
+
+      return new Response(pdfBlob, {
         headers: {
           ...corsHeaders,
           "Content-Type": "application/pdf",
@@ -710,6 +713,70 @@ async function handleRequest(req: Request): Promise<Response> {
       return new Response(JSON.stringify({
         success: true,
         message: "File deleted successfully"
+      }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" }
+      });
+    } catch (error) {
+      return new Response(JSON.stringify({
+        error: true,
+        message: String(error)
+      }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" }
+      });
+    }
+  }
+
+  if (pathname === "/api/cleanup" && req.method === "POST") {
+    try {
+      let deletedCount = 0;
+      let errors = 0;
+
+      // Delete all files in uploads directory
+      try {
+        for await (const entry of Deno.readDir("./uploads")) {
+          if (entry.isFile) {
+            try {
+              await Deno.remove(`./uploads/${entry.name}`);
+              deletedCount++;
+              console.log(`🗑️  Cleaned up: ${entry.name}`);
+            } catch (error) {
+              errors++;
+              console.log(`⚠️  Could not delete ${entry.name}: ${error}`);
+            }
+          }
+        }
+      } catch (error) {
+        // Directory might not exist or be empty
+        console.log(`ℹ️  Uploads directory cleanup: ${error}`);
+      }
+
+      // Delete all files in extracted_data directory
+      try {
+        for await (const entry of Deno.readDir("./extracted_data")) {
+          if (entry.isFile) {
+            try {
+              await Deno.remove(`./extracted_data/${entry.name}`);
+              deletedCount++;
+              console.log(`🗑️  Cleaned up extracted data: ${entry.name}`);
+            } catch (error) {
+              errors++;
+              console.log(`⚠️  Could not delete ${entry.name}: ${error}`);
+            }
+          }
+        }
+      } catch (error) {
+        // Directory might not exist or be empty
+        console.log(`ℹ️  Extracted data cleanup: ${error}`);
+      }
+
+      // Clear all sessions
+      sessions.clear();
+      console.log(`🧹 Cleaned up ${deletedCount} files, ${errors} errors`);
+
+      return new Response(JSON.stringify({
+        success: true,
+        deletedCount,
+        errors
       }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" }
       });
